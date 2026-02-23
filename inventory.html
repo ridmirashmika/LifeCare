@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory | LifeCare - Pharmacy Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        medical: { 100: '#e6f6ff', 500: '#0ea5e9', 600: '#0284c7', 900: '#0c4a6e' },
+                        care: { 500: '#10b981' }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-sans antialiased overflow-x-hidden">
+
+    <!-- Sidebar -->
+    <aside
+        class="fixed inset-y-0 left-0 bg-white shadow-xl max-w-xs w-64 z-50 transform transition-transform duration-300 ease-in-out"
+        id="sidebar">
+        <div class="flex items-center justify-center p-6 border-b border-gray-100">
+            <div
+                class="w-10 h-10 bg-medical-500 rounded-lg flex items-center justify-center text-white font-bold text-xl mr-3 shadow-lg shadow-medical-500/30">
+                <i class="fa-solid fa-notes-medical"></i>
+            </div>
+            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-medical-600 to-care-500">
+                LifeCare</h1>
+        </div>
+
+        <nav class="p-4 space-y-2 mt-4">
+            <a href="index.html"
+                class="flex items-center space-x-3 p-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-medical-600 font-medium transition-all duration-200 group">
+                <i class="fa-solid fa-chart-pie w-5 text-center group-hover:scale-110 transition-transform"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="inventory.html"
+                class="flex items-center space-x-3 p-3 rounded-xl bg-medical-50 text-medical-600 font-medium transition-all duration-200">
+                <i class="fa-solid fa-boxes-stacked w-5 text-center"></i>
+                <span>Inventory</span>
+            </a>
+            <a href="sales.html"
+                class="flex items-center space-x-3 p-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-medical-600 font-medium transition-all duration-200 group">
+                <i class="fa-solid fa-cart-shopping w-5 text-center group-hover:scale-110 transition-transform"></i>
+                <span>Sales & Billing</span>
+            </a>
+            <a href="customers.html"
+                class="flex items-center space-x-3 p-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-medical-600 font-medium transition-all duration-200 group">
+                <i class="fa-solid fa-users w-5 text-center group-hover:scale-110 transition-transform"></i>
+                <span>Customers</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-64 transition-all duration-300 min-h-screen flex flex-col" id="main-content">
+        <!-- Topbar -->
+        <header
+            class="bg-white blur-backdrop h-20 flex items-center justify-between px-8 border-b border-gray-100 sticky top-0 z-40">
+            <div class="flex items-center">
+                <button id="sidebar-toggle"
+                    class="text-gray-500 hover:text-medical-600 focus:outline-none focus:ring-2 focus:ring-medical-500/20 rounded-lg p-2 mr-4 transition-colors">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <h2 class="text-xl font-bold text-gray-800 hidden md:block">Inventory Management</h2>
+            </div>
+
+            <div class="flex items-center space-x-5">
+                <button
+                    class="bg-medical-500 hover:bg-medical-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-md shadow-medical-500/20 flex items-center">
+                    <i class="fa-solid fa-plus mr-2"></i> Add Item
+                </button>
+                <div class="flex items-center space-x-3 cursor-pointer group">
+                    <img src="https://ui-avatars.com/api/?name=Dr+Admin&background=0ea5e9&color=fff" alt="User"
+                        class="h-10 w-10 rounded-xl shadow-sm border-2 border-transparent hover:border-medical-200 transition-all">
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 p-8">
+            <!-- Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Total Items</p>
+                        <h3 class="text-2xl font-bold text-gray-800">1,245</h3>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-pills"></i></div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Out of Stock</p>
+                        <h3 class="text-2xl font-bold text-red-600">8</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-ban"></i></div>
+                </div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-50 flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Expiring Soon (30 Days)</p>
+                        <h3 class="text-2xl font-bold text-orange-500">24</h3>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-calendar-xmark"></i></div>
+                </div>
+            </div>
+
+            <!-- Filters & Search -->
+            <div
+                class="bg-white p-4 rounded-t-2xl border border-gray-50 border-b-0 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="relative w-full md:w-96">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" placeholder="Search by name, generic name, or SKU..."
+                        class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-medical-500/20 focus:border-medical-500 text-sm transition-all">
+                </div>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <select
+                        class="bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-medical-500/20 w-full md:w-auto">
+                        <option>All Categories</option>
+                        <option>Tablets</option>
+                        <option>Syrups</option>
+                        <option>Injections</option>
+                        <option>Ointments</option>
+                    </select>
+                    <button
+                        class="bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl px-4 py-2.5 text-gray-600 transition-colors">
+                        <i class="fa-solid fa-filter"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Inventory Table -->
+            <div class="bg-white rounded-b-2xl shadow-sm border border-gray-50 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-500 text-xs uppercase border-b border-gray-200">
+                                <th class="py-3 px-6 font-semibold">SKU / ID</th>
+                                <th class="py-3 px-6 font-semibold">Medicine Name</th>
+                                <th class="py-3 px-6 font-semibold">Category</th>
+                                <th class="py-3 px-6 font-semibold">Stock</th>
+                                <th class="py-3 px-6 font-semibold">Price (Rs)</th>
+                                <th class="py-3 px-6 font-semibold">Expiry Date</th>
+                                <th class="py-3 px-6 font-semibold">Status</th>
+                                <th class="py-3 px-6 font-semibold text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-gray-100">
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-6 font-medium text-gray-600">MED-001</td>
+                                <td class="py-4 px-6">
+                                    <div class="font-bold text-gray-800">Panadol 500mg</div>
+                                    <div class="text-xs text-gray-500">Paracetamol</div>
+                                </td>
+                                <td class="py-4 px-6 text-gray-600">Tablet</td>
+                                <td class="py-4 px-6 font-semibold text-gray-800">450 <span
+                                        class="text-xs text-gray-400 font-normal">strips</span></td>
+                                <td class="py-4 px-6 font-medium text-gray-800">35.00</td>
+                                <td class="py-4 px-6 text-gray-600">2026-10-15</td>
+                                <td class="py-4 px-6"><span
+                                        class="bg-emerald-100 text-emerald-600 px-2.5 py-1 rounded-full text-xs font-semibold">In
+                                        Stock</span></td>
+                                <td class="py-4 px-6 text-center space-x-2">
+                                    <button
+                                        class="text-blue-500 hover:text-blue-700 bg-blue-50 w-8 h-8 rounded-lg transition-colors"><i
+                                            class="fa-solid fa-pen"></i></button>
+                                    <button
+                                        class="text-red-500 hover:text-red-700 bg-red-50 w-8 h-8 rounded-lg transition-colors"><i
+                                            class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-6 font-medium text-gray-600">MED-042</td>
+                                <td class="py-4 px-6">
+                                    <div class="font-bold text-gray-800">Amoxicillin 250mg</div>
+                                    <div class="text-xs text-gray-500">Antibiotic</div>
+                                </td>
+                                <td class="py-4 px-6 text-gray-600">Capsule</td>
+                                <td class="py-4 px-6 font-semibold text-red-600">12 <span
+                                        class="text-xs text-gray-400 font-normal">strips</span></td>
+                                <td class="py-4 px-6 font-medium text-gray-800">120.00</td>
+                                <td class="py-4 px-6 text-gray-600">2024-12-01</td>
+                                <td class="py-4 px-6"><span
+                                        class="bg-orange-100 text-orange-600 px-2.5 py-1 rounded-full text-xs font-semibold">Low
+                                        Stock</span></td>
+                                <td class="py-4 px-6 text-center space-x-2">
+                                    <button
+                                        class="text-blue-500 hover:text-blue-700 bg-blue-50 w-8 h-8 rounded-lg transition-colors"><i
+                                            class="fa-solid fa-pen"></i></button>
+                                    <button
+                                        class="text-red-500 hover:text-red-700 bg-red-50 w-8 h-8 rounded-lg transition-colors"><i
+                                            class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-6 font-medium text-gray-600">MED-089</td>
+                                <td class="py-4 px-6">
+                                    <div class="font-bold text-gray-800">Piriton</div>
+                                    <div class="text-xs text-gray-500">Chlorpheniramine</div>
+                                </td>
+                                <td class="py-4 px-6 text-gray-600">Syrup</td>
+                                <td class="py-4 px-6 font-semibold text-gray-800">0 <span
+                                        class="text-xs text-gray-400 font-normal">bottles</span></td>
+                                <td class="py-4 px-6 font-medium text-gray-800">280.00</td>
+                                <td class="py-4 px-6 text-gray-600">2025-05-20</td>
+                                <td class="py-4 px-6"><span
+                                        class="bg-red-100 text-red-600 px-2.5 py-1 rounded-full text-xs font-semibold">Out
+                                        of Stock</span></td>
+                                <td class="py-4 px-6 text-center space-x-2">
+                                    <button
+                                        class="text-blue-500 hover:text-blue-700 bg-blue-50 w-8 h-8 rounded-lg transition-colors"><i
+                                            class="fa-solid fa-pen"></i></button>
+                                    <button
+                                        class="text-red-500 hover:text-red-700 bg-red-50 w-8 h-8 rounded-lg transition-colors"><i
+                                            class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="p-4 border-t border-gray-100 flex items-center justify-between">
+                    <span class="text-sm text-gray-500">Showing 1 to 10 of 1,245 entries</span>
+                    <div class="flex space-x-1">
+                        <button
+                            class="px-3 py-1 border border-gray-200 rounded-lg text-sm text-gray-500 hover:bg-gray-50">Prev</button>
+                        <button class="px-3 py-1 bg-medical-500 text-white rounded-lg text-sm font-medium">1</button>
+                        <button
+                            class="px-3 py-1 border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50">2</button>
+                        <button
+                            class="px-3 py-1 border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50">3</button>
+                        <button
+                            class="px-3 py-1 border border-gray-200 rounded-lg text-sm text-gray-500 hover:bg-gray-50">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="assets/js/script.js"></script>
+</body>
+
+</html>

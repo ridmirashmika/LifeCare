@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeCare - Pharmacy Management System</title>
+    <!-- Tailwind CSS (CDN since Node.js is restricted) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        medical: {
+                            100: '#e6f6ff',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        },
+                        care: {
+                            500: '#10b981',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Chart.js for Dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased overflow-x-hidden">
+
+    <!-- Sidebar -->
+    <aside class="fixed inset-y-0 left-0 bg-white shadow-xl max-w-xs w-64 z-50 transform transition-transform duration-300 ease-in-out" id="sidebar">
+        <div class="flex items-center justify-center p-6 border-b border-gray-100">
+            <div class="w-10 h-10 bg-medical-500 rounded-lg flex items-center justify-center text-white font-bold text-xl mr-3 shadow-lg shadow-medical-500/30">
+                <i class="fa-solid fa-notes-medical"></i>
+            </div>
+            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-medical-600 to-care-500">LifeCare</h1>
+        </div>
+        
+        <nav class="p-4 space-y-2 mt-4">
+            <a href="index.html" class="flex items-center space-x-3 p-3 rounded-xl bg-medical-50 text-medical-600 font-medium transition-all duration-200">
+                <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="inventory.html" class="flex items-center space-x-3 p-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-medical-600 font-medium transition-all duration-200 group">
+                <i class="fa-solid fa-boxes-stacked w-5 text-center group-hover:scale-110 transition-transform"></i>
+                <span>Inventory</span>
+            </a>
+            <a href="sales.html" class="flex items-center space-x-3 p-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-medical-600 font-medium transition-all duration-200 group">
+                <i class="fa-solid fa-cart-shopping w-5 text-center group-hover:scale-110 transition-transform"></i>
+                <span>Sales & Billing</span>
+            </a>
+            <a href="customers.html" class="flex items-center space-x-3 p-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-medical-600 font-medium transition-all duration-200 group">
+                <i class="fa-solid fa-users w-5 text-center group-hover:scale-110 transition-transform"></i>
+                <span>Customers</span>
+            </a>
+            <a href="#" class="flex items-center space-x-3 p-3 rounded-xl text-gray-500 hover:bg-gray-50 hover:text-medical-600 font-medium transition-all duration-200 group">
+                <i class="fa-solid fa-gear w-5 text-center group-hover:scale-110 transition-transform"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="absolute bottom-0 left-0 right-0 p-4">
+            <div class="bg-gradient-to-br from-medical-500 to-medical-600 rounded-2xl p-4 text-white shadow-lg relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-white opacity-10 rounded-full blur-xl"></div>
+                <h4 class="font-semibold mb-1 relative z-10">LifeCare Pro</h4>
+                <p class="text-xs text-medical-100 mb-3 relative z-10">Upgrade for more features</p>
+                <button class="w-full bg-white text-medical-600 text-sm font-medium py-2 rounded-lg hover:shadow-md transition-shadow relative z-10">Upgrade Now</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-64 transition-all duration-300 min-h-screen flex flex-col" id="main-content">
+        <!-- Topbar -->
+        <header class="bg-white blur-backdrop h-20 flex items-center justify-between px-8 border-b border-gray-100 sticky top-0 z-40">
+            <div class="flex items-center">
+                <button id="sidebar-toggle" class="text-gray-500 hover:text-medical-600 focus:outline-none focus:ring-2 focus:ring-medical-500/20 rounded-lg p-2 mr-4 transition-colors">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <div class="relative hidden md:block">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" placeholder="Search medicines, bills..." class="pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-medical-500/20 w-80 text-sm transition-shadow">
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-5">
+                <button class="relative text-gray-500 hover:text-medical-600 transition-colors">
+                    <i class="fa-regular fa-bell text-xl"></i>
+                    <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+                </button>
+                
+                <div class="flex items-center space-x-3 cursor-pointer group">
+                    <img src="https://ui-avatars.com/api/?name=Dr+Admin&background=0ea5e9&color=fff" alt="User Profile" class="h-10 w-10 rounded-xl shadow-sm group-hover:shadow border-2 border-transparent group-hover:border-medical-200 transition-all">
+                    <div class="hidden md:block">
+                        <p class="text-sm font-semibold text-gray-700">Dr. Administrator</p>
+                        <p class="text-xs text-gray-500">Chief Pharmacist</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Area -->
+        <div class="flex-1 p-8">
+            <!-- Hero Banner -->
+            <div class="bg-white rounded-3xl p-8 mb-8 shadow-sm flex items-center justify-between overflow-hidden relative group">
+                <div class="absolute inset-0 bg-gradient-to-r from-medical-500/10 to-transparent z-0"></div>
+                <div class="relative z-10 max-w-lg">
+                    <span class="px-3 py-1 bg-medical-100 text-medical-600 rounded-full text-xs font-semibold mb-4 inline-block">Welcome Back!</span>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">Good Morning, Admin 👋</h2>
+                    <p class="text-gray-500 mb-6">Here's what's happening in your pharmacy today. You have <strong class="text-medical-600">12</strong> low stock alerts.</p>
+                    <button class="bg-medical-500 hover:bg-medical-600 text-white px-6 py-2.5 rounded-xl font-medium transition-colors shadow-lg shadow-medical-500/30 flex items-center space-x-2">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>New Sale</span>
+                    </button>
+                </div>
+                <div class="relative z-10 hidden lg:block w-64 h-40">
+                    <img src="assets/img/hero_pharmacy.webp" alt="Pharmacy" class="absolute right-0 bottom-0 top-0 object-cover w-full h-full rounded-2xl shadow-lg transform group-hover:-translate-y-2 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1586015555751-63b0bdfcf20e?w=800&auto=format&fit=crop'">
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Stat Card 1 -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-50 relative overflow-hidden">
+                    <div class="absolute w-24 h-24 bg-medical-50 rounded-full -top-6 -right-6 z-0"></div>
+                    <div class="relative z-10 flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium mb-1">Total Sales</p>
+                            <h3 class="text-2xl font-bold text-gray-800">Rs. 45,200</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-medical-100 text-medical-600 rounded-xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-sack-dollar"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm relative z-10">
+                        <span class="text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center font-medium">
+                            <i class="fa-solid fa-arrow-trend-up mr-1 text-xs"></i> 12.5%
+                        </span>
+                        <span class="text-gray-400 ml-2">vs yesterday</span>
+                    </div>
+                </div>
+
+                <!-- Stat Card 2 -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-50 relative overflow-hidden">
+                    <div class="absolute w-24 h-24 bg-care-50 rounded-full -top-6 -right-6 z-0"></div>
+                    <div class="relative z-10 flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium mb-1">Prescriptions</p>
+                            <h3 class="text-2xl font-bold text-gray-800">142</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-care-100 text-care-500 rounded-xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-file-prescription"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm relative z-10">
+                        <span class="text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center font-medium">
+                            <i class="fa-solid fa-arrow-trend-up mr-1 text-xs"></i> 8.2%
+                        </span>
+                        <span class="text-gray-400 ml-2">vs yesterday</span>
+                    </div>
+                </div>
+
+                <!-- Stat Card 3 -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-50 relative overflow-hidden">
+                    <div class="absolute w-24 h-24 bg-orange-50 rounded-full -top-6 -right-6 z-0"></div>
+                    <div class="relative z-10 flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium mb-1">Low Stock Items</p>
+                            <h3 class="text-2xl font-bold text-gray-800">12</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-orange-100 text-orange-500 rounded-xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm relative z-10">
+                        <span class="text-red-500 bg-red-50 px-2 py-0.5 rounded-md flex items-center font-medium">
+                            <i class="fa-solid fa-arrow-trend-up mr-1 text-xs"></i> +2
+                        </span>
+                        <span class="text-gray-400 ml-2">Needs attention</span>
+                    </div>
+                </div>
+
+                <!-- Stat Card 4 -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-50 relative overflow-hidden">
+                    <div class="absolute w-24 h-24 bg-purple-50 rounded-full -top-6 -right-6 z-0"></div>
+                    <div class="relative z-10 flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium mb-1">Customers</p>
+                            <h3 class="text-2xl font-bold text-gray-800">1,204</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm relative z-10">
+                        <span class="text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center font-medium">
+                            <i class="fa-solid fa-arrow-trend-up mr-1 text-xs"></i> 4.1%
+                        </span>
+                        <span class="text-gray-400 ml-2">vs last week</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Charts & Tables Area -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Sales Chart -->
+                <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-50">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-gray-800">Revenue Overview</h3>
+                        <select class="bg-gray-50 border-none rounded-lg text-sm focus:ring-2 focus:ring-medical-500/20 text-gray-600 font-medium">
+                            <option>This Week</option>
+                            <option>This Month</option>
+                            <option>This Year</option>
+                        </select>
+                    </div>
+                    <div class="relative h-72 w-full">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Fast Moving Medicines -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-50">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-gray-800">Top Selling Items</h3>
+                        <button class="text-medical-600 hover:text-medical-800 text-sm font-medium">View All</button>
+                    </div>
+                    <div class="space-y-4">
+                        <!-- Item 1 -->
+                        <div class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-lg bg-pink-100 flex items-center justify-center text-pink-500">
+                                    <i class="fa-solid fa-capsules"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-gray-800">Panadol 500mg</h4>
+                                    <p class="text-xs text-gray-500">Paracetamol</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-bold text-gray-800">240 Sold</p>
+                                <p class="text-xs text-emerald-500 flex items-center justify-end"><i class="fa-solid fa-caret-up mr-1"></i> 12%</p>
+                            </div>
+                        </div>
+                        <!-- Item 2 -->
+                        <div class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-500">
+                                    <i class="fa-solid fa-tablets"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-gray-800">Amoxicillin 250mg</h4>
+                                    <p class="text-xs text-gray-500">Antibiotic</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-bold text-gray-800">185 Sold</p>
+                                <p class="text-xs text-emerald-500 flex items-center justify-end"><i class="fa-solid fa-caret-up mr-1"></i> 8%</p>
+                            </div>
+                        </div>
+                        <!-- Item 3 -->
+                        <div class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-orange-500">
+                                    <i class="fa-solid fa-bottle-droplet"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-gray-800">Cough Syrup</h4>
+                                    <p class="text-xs text-gray-500">Piriton</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-bold text-gray-800">120 Sold</p>
+                                <p class="text-xs text-red-500 flex items-center justify-end"><i class="fa-solid fa-caret-down mr-1"></i> 3%</p>
+                            </div>
+                        </div>
+                        <!-- Item 4 -->
+                        <div class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-500">
+                                    <i class="fa-solid fa-spray-can"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-gray-800">Vicks Inhaler</h4>
+                                    <p class="text-xs text-gray-500">Cold Relief</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-bold text-gray-800">95 Sold</p>
+                                <p class="text-xs text-emerald-500 flex items-center justify-end"><i class="fa-solid fa-caret-up mr-1"></i> 5%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Transactions Table -->
+            <div class="mt-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-50">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-gray-800">Recent Transactions</h3>
+                    <button class="bg-gray-50 hover:bg-gray-100 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        <i class="fa-solid fa-download mr-2"></i>Export
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-gray-400 text-xs uppercase border-b border-gray-100">
+                                <th class="pb-3 px-4 font-semibold">Invoice ID</th>
+                                <th class="pb-3 px-4 font-semibold">Date & Time</th>
+                                <th class="pb-3 px-4 font-semibold">Customer</th>
+                                <th class="pb-3 px-4 font-semibold">Items</th>
+                                <th class="pb-3 px-4 font-semibold">Total Amount</th>
+                                <th class="pb-3 px-4 font-semibold">Status</th>
+                                <th class="pb-3 px-4 font-semibold text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-4 font-medium text-gray-800">#INV-2023-001</td>
+                                <td class="py-4 px-4 text-gray-500">Today, 10:24 AM</td>
+                                <td class="py-4 px-4"><span class="flex items-center"><img src="https://ui-avatars.com/api/?name=Kasun+Perera&background=random" class="w-6 h-6 rounded-full mr-2"> Kasun Perera</span></td>
+                                <td class="py-4 px-4 text-gray-500">3 Items</td>
+                                <td class="py-4 px-4 font-bold text-gray-800">Rs. 1,450.00</td>
+                                <td class="py-4 px-4"><span class="bg-emerald-100 text-emerald-600 px-2.5 py-1 rounded-full text-xs font-semibold">Completed</span></td>
+                                <td class="py-4 px-4 text-center">
+                                    <button class="text-gray-400 hover:text-medical-600 transition-colors"><i class="fa-solid fa-eye"></i></button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-4 font-medium text-gray-800">#INV-2023-002</td>
+                                <td class="py-4 px-4 text-gray-500">Today, 09:45 AM</td>
+                                <td class="py-4 px-4"><span class="flex items-center"><div class="w-6 h-6 rounded-full bg-gray-200 mr-2 flex items-center justify-center text-xs"><i class="fa-solid fa-user text-gray-400"></i></div> Walk-in Customer</span></td>
+                                <td class="py-4 px-4 text-gray-500">1 Item</td>
+                                <td class="py-4 px-4 font-bold text-gray-800">Rs. 320.00</td>
+                                <td class="py-4 px-4"><span class="bg-emerald-100 text-emerald-600 px-2.5 py-1 rounded-full text-xs font-semibold">Completed</span></td>
+                                <td class="py-4 px-4 text-center">
+                                    <button class="text-gray-400 hover:text-medical-600 transition-colors"><i class="fa-solid fa-eye"></i></button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="py-4 px-4 font-medium text-gray-800">#INV-2023-003</td>
+                                <td class="py-4 px-4 text-gray-500">Today, 09:12 AM</td>
+                                <td class="py-4 px-4"><span class="flex items-center"><img src="https://ui-avatars.com/api/?name=Nimali+Silva&background=random" class="w-6 h-6 rounded-full mr-2"> Nimali Silva</span></td>
+                                <td class="py-4 px-4 text-gray-500">5 Items</td>
+                                <td class="py-4 px-4 font-bold text-gray-800">Rs. 4,200.00</td>
+                                <td class="py-4 px-4"><span class="bg-orange-100 text-orange-600 px-2.5 py-1 rounded-full text-xs font-semibold">Pending</span></td>
+                                <td class="py-4 px-4 text-center">
+                                    <button class="text-gray-400 hover:text-medical-600 transition-colors"><i class="fa-solid fa-eye"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
